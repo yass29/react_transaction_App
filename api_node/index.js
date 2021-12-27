@@ -26,7 +26,7 @@ var conn = new sql.createConnection({
 
 //Validate CORS URLS
 const corsOptions = {
-  origin: [" http://localhost:8080"," http://localhost:3000"]
+  origin: [" http://localhost:8080", " http://localhost:3000"]
 };
 const requestEndpoint = "http://localhost:1337";
 
@@ -44,7 +44,7 @@ const getBalance = () => {
     conn.query("SELECT balance FROM transcation ORDER  BY created_at DESC LIMIT  1", function (err, datas) {
       if (err) reject(err);
       var tempBalance = (datas ? datas[0].balance : 0);
-      
+
       resolve(tempBalance);
     });
   })
@@ -61,14 +61,16 @@ app.post("/add", cors(corsOptions), async function (request, response) {
   var balance = await remaining();
   let userDetails = request.body.data;
   var mysql = 'INSERT INTO transcation SET ? ';
-  userDetails.type == 'Credit' ? balance+=parseInt(userDetails.amount) : balance-=parseInt(userDetails.amount);
+  userDetails.type == 'Credit' ? balance += parseInt(userDetails.amount) : balance -= parseInt(userDetails.amount);
   userDetails.balance = balance;
   conn.query(mysql, userDetails, function (err, data) {
     if (err) throw err;
-
+    response.json(data);
   });
 
 });
+
+
 var bodyParser = require('body-parser');
 
 // create application/x-www-form-urlencoded parser

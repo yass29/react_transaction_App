@@ -6,76 +6,68 @@ import { TransactionData } from './components/TransactionData';
 import CreateTransaction from './components/createTransaction';
 import { getAllTransactions, createTransaction } from './services/TransactionService';
 
-function Transactions() { 
+function Transactions() {
 
   const [transaction, setTransaction] = useState({
-    'type':'Credit',
-    'balance':0,
+    'type': 'Credit',
+    'balance': 0,
   })
   const [transactions, setTransactions] = useState([])
-  const [abc, setAbc] = useState("")
 
 
   const transactionCreate = (e) => {
     createTransaction(transaction)
-        .then(response => {
-          console.log(response);
+      .then(response => {
+        fetchAllTransactions();
       });
-      setAbc("fjdagh");
   }
 
 
-  const fetchAllUsers = () => {
+  const fetchAllTransactions = () => {
     getAllTransactions()
       .then(transactions => {
         setTransactions(transactions);
-        
       });
   }
 
   useEffect(() => {
-    setAbc('');
-    getAllTransactions()
-      .then(transactions => {
-        console.log(transactions)
-        setTransactions(transactions);
-      });
-  }, [abc])
+    fetchAllTransactions();
+  }, [])
 
   const onChangeForm = (e) => {
-      if (e.target.name === 'description') {
-          transaction.description = e.target.value;
-      } else if (e.target.name === 'amount') {
-          transaction.amount = e.target.value;
-      } else if (e.target.name === 'type') {
-          transaction.type = e.target.value;
+    if (e.target.name === 'description') {
+      transaction.description = e.target.value;
+    } else if (e.target.name === 'amount') {
+      transaction.amount = e.target.value;
+    } else if (e.target.name === 'type') {
+      transaction.type = e.target.value;
 
-      }
-      
-      setTransaction(transaction)
+    }
+
+    setTransaction(transaction)
   }
-  
-    
-    return (
-        <div className="Transactions">
-          <Header></Header>
-          <div className="container mrgnbtm">
-            <div className="row">
-              <div className="col-md-12">
-                  <CreateTransaction 
-                    transaction={transaction}
-                    onChangeForm={onChangeForm}
-                    createTransaction={transactionCreate}
-                    >
-                  </CreateTransaction>
-              </div>
-              </div>
+
+
+  return (
+    <div className="Transactions">
+      <Header></Header>
+      <div className="container mrgnbtm">
+        <div className="row">
+          <div className="col-md-12">
+            <CreateTransaction
+              transaction={transaction}
+              onChangeForm={onChangeForm}
+              createTransaction={transactionCreate}
+            >
+            </CreateTransaction>
           </div>
-          <div className="row mrgnbtm">
-            <TransactionData transactions={transactions}></TransactionData>
-          </div>
-        </div> 
-    );
+        </div>
+      </div>
+      <div className="row mrgnbtm">
+        <TransactionData transactions={transactions}></TransactionData>
+      </div>
+    </div>
+  );
 }
 
 export default Transactions;
